@@ -45,14 +45,6 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Logout bem-sucedido");
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
@@ -81,6 +73,23 @@ public class LoginController {
             registerResponse.put("status", "error");
             registerResponse.put("message", "Nome de usuário já existe");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(registerResponse);
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(@RequestHeader("Authorization") String token) {
+        Map<String, Object> response = new HashMap<>();
+        
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            jwtUtil.revokeToken(token);
+            response.put("status", "success");
+            response.put("message", "Logout realizado com sucesso");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "Token inválido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
     
@@ -171,7 +180,6 @@ public class LoginController {
         }
     }
 
-
     @GetMapping("/users/id/{id}")
     public ResponseEntity<?> getUserById(@PathVariable UUID id) {
         User user = userService.getUserById(id);
@@ -180,7 +188,7 @@ public class LoginController {
             response.put("status", "success");
             response.put("message", "Usuário encontrado");
             response.put("user", user.getUsername());
-            response.put("id", user.getEmail());
+            response.put("email", user.getEmail());
             return ResponseEntity.ok(response);
         } else {
             response.put("status", "error");

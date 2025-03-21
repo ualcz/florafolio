@@ -13,8 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.Set;
 
 @Component
 public class JwtUtil {
@@ -24,6 +26,17 @@ public class JwtUtil {
 
     @Value("${jwt.expiration}")
     private Long expiration;
+    private Set<String> revokedTokens = new HashSet<>();
+
+    public void revokeToken(String token) {
+        revokedTokens.add(token);
+    }
+
+    public boolean isTokenRevoked(String token) {
+        System.out.println("Token revogado: " + token);
+        return revokedTokens.contains(token);
+        
+    }
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
@@ -42,9 +55,10 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && !isTokenRevoked(token));
+        
     }
 
     public String extractUsername(String token) {
