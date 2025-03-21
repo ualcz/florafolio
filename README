@@ -1,0 +1,121 @@
+# User Management API
+
+Esta API REST fornece funcionalidades de gerenciamento de usuários, incluindo registro, autenticação, busca, atualização e exclusão de usuários.
+
+## � Requisitos
+
+- Java 17+
+- Maven
+- PostgreSQL
+
+## 🛠 Configuração
+
+1. Renomeie `application-example.properties` para `application.properties`
+2. Configure as variáveis de ambiente:
+
+```properties
+server.port=8080
+spring.application.name=login-api
+
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASSWORD}
+
+jwt.secret=${JWT_SECRET}
+```
+
+## 🚀 Executando a API
+
+```bash
+mvnw.cmd spring-boot:run
+```
+
+## 📚 Endpoints
+
+### POST /register
+Registra um novo usuário
+
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string",
+  "email": "string"
+}
+```
+
+**Responses:**
+- 201 Created: Usuário registrado com sucesso
+- 400 Bad Request: Campos obrigatórios faltando
+- 409 Conflict: Nome de usuário já existe
+
+### POST /login
+Autentica um usuário
+
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+**Responses:**
+- 200 OK: Login bem-sucedido
+- 401 Unauthorized: Credenciais inválidas
+
+### GET /users
+Lista todos os usuários
+
+**Responses:**
+- 200 OK: Lista de usuários
+
+### GET /users/{username}
+Busca um usuário pelo nome de usuário
+
+**Responses:**
+- 200 OK: Dados do usuário
+- 404 Not Found: Usuário não encontrado
+
+### PUT /users/id/{id}/username
+Atualiza o nome de usuário
+
+**Request Body:**
+```json
+{
+  "currentUsername": "string",
+  "newUsername": "string"
+}
+```
+
+**Responses:**
+- 200 OK: Nome de usuário atualizado
+- 400 Bad Request: Campos obrigatórios faltando
+- 404 Not Found: Usuário não encontrado
+
+### PUT /users/id/{id}/password
+Atualiza a senha do usuário
+
+**Request Body:**
+```json
+{
+  "newPassword": "string"
+}
+```
+
+**Responses:**
+- 200 OK: Senha atualizada
+- 404 Not Found: Usuário não encontrado
+
+## 🛡 Segurança
+
+- Autenticação via JWT
+- Senhas criptografadas com BCrypt
+- Endpoints protegidos exceto /register e /login
+
+## 🧪 Testes
+
+Execute os testes com:
+```bash
+mvnw.cmd test
+```
