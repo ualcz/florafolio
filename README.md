@@ -13,7 +13,7 @@ Esta API REST fornece funcionalidades de gerenciamento de usuários, incluindo r
 1. Renomeie `application-example.properties` para `application.properties`
 2. Configure as variáveis de ambiente:
 
-```properties
+```java
 server.port=8080
 spring.application.name=login-api
 
