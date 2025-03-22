@@ -1,21 +1,17 @@
 package com.login.dto;
 
-import java.util.UUID;
-
 public class LoginResponseDTO {
     private String status;
     private String message;
-    private UUID id;
     private String username;
     private String token;
     
     // Constructors
     public LoginResponseDTO() {}
     
-    public LoginResponseDTO(String status, String message, UUID id, String username, String token) {
+    public LoginResponseDTO(String status, String message, String username, String token) {
         this.status = status;
         this.message = message;
-        this.id = id;
         this.username = username;
         this.token = token;
     }
@@ -35,14 +31,6 @@ public class LoginResponseDTO {
     
     public void setMessage(String message) {
         this.message = message;
-    }
-    
-    public UUID getId() {
-        return id;
-    }
-    
-    public void setId(UUID id) {
-        this.id = id;
     }
     
     public String getUsername() {
