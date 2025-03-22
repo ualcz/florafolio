@@ -96,7 +96,7 @@ Autentica um usuário e retorna um token JWT.
 - O ID do usuário não é retornado na resposta, apenas armazenado no token JWT
 - A senha é validada usando BCrypt
 
-#### POST /logout
+#### POST /users/logout
 Revoga o token JWT atual, invalidando a sessão do usuário.
 
 **Request:**

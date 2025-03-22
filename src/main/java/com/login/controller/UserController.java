@@ -128,29 +128,36 @@ public class UserController {
     }
 
  
-    @PostMapping("/logout")
-    public ResponseEntity<ResponseDTO> logout(@RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
+    @PostMapping("/users/logout")
+    public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = true) String authHeader) {
+        
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            if (token.isEmpty()) {
+                ResponseDTO response = new ResponseDTO(
+                    "error", 
+                    "Token de autenticação inválido"
+                );
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
             jwtUtil.revokeToken(token);
             ResponseDTO response = new ResponseDTO(
                 "success", 
-                "Logout realizado com sucesso"
+                "Logout bem-sucedido"
             );
             return ResponseEntity.ok(response);
         } else {
             ResponseDTO response = new ResponseDTO(
                 "error", 
-                "Token inválido"
+                "Token de autenticação necessário"
             );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }    
     }
     
 
     @GetMapping("/users/profile")
-    public ResponseEntity<?> getCurrentUserProfile(
-            @RequestHeader(value = "Authorization", required = true) String authHeader) {
+    public ResponseEntity<?> getCurrentUserProfile(@RequestHeader(value = "Authorization", required = true) String authHeader) {
         
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             ResponseDTO response = new ResponseDTO(
@@ -199,7 +206,7 @@ public class UserController {
     @GetMapping("/users/{username}")
     public ResponseEntity<?> getUserByUsername(
             @PathVariable String username,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            @RequestHeader(value = "Authorization", required = true) String authHeader) {
         
         User user = userService.getUserByUsername(username);
         if (user != null) {
@@ -245,7 +252,7 @@ public class UserController {
     public ResponseEntity<?> updateUsernameById(
             @PathVariable UUID id,
             @RequestBody UsernameUpdateDTO usernameUpdateDTO,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            @RequestHeader(value = "Authorization", required = true) String authHeader) {
         
         String currentUsername = usernameUpdateDTO.getCurrentUsername();
         String newUsername = usernameUpdateDTO.getNewUsername();
@@ -298,7 +305,7 @@ public class UserController {
     public ResponseEntity<?> updatePasswordById(
             @PathVariable UUID id,
             @RequestBody PasswordUpdateDTO passwordUpdateDTO,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            @RequestHeader(value = "Authorization", required = true) String authHeader) {
         
         // Extract request data
         String currentPassword = passwordUpdateDTO.getCurrentPassword();
