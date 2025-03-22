@@ -65,6 +65,17 @@ public class UserService {
     }
 
     
+
+    @Transactional
+    public User deleteUserById(UUID id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            userRepository.delete(user);
+            return user;
+        }
+        return null;
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

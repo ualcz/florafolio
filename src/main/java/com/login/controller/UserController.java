@@ -156,6 +156,26 @@ public class UserController {
     }
     
 
+    @DeleteMapping("/users/delete")
+    public ResponseEntity<ResponseDTO> deleteUserById(@RequestHeader(value = "Authorization", required = true) String authHeader) {
+        String token = authHeader.substring(7);
+        UUID userId = jwtUtil.extractUserId(token);
+        User deleted = userService.deleteUserById(userId);
+        if (deleted != null) {
+            ResponseDTO response = new ResponseDTO(
+                "success", 
+                "Usuário excluído com sucesso"
+            );
+            return ResponseEntity.ok(response);
+        } else {
+            ResponseDTO response = new ResponseDTO(
+                "error", 
+                "Usuário nao encontrado"
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
     @GetMapping("/users/profile")
     public ResponseEntity<?> getCurrentUserProfile(@RequestHeader(value = "Authorization", required = true) String authHeader) {
         

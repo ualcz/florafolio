@@ -96,6 +96,33 @@ Autentica um usuário e retorna um token JWT.
 - O ID do usuário não é retornado na resposta, apenas armazenado no token JWT
 - A senha é validada usando BCrypt
 
+#### POST /users/delete
+Deleta o usuário
+
+**Request:**
+- Não requer corpo da requisição
+- Requer cabeçalho `Authorization: Bearer {token}`
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Usuário excluído com sucesso"
+}
+```
+
+**Response (400 Bad Request):**
+```json
+{
+  "status": "error",
+  "message":"Usuário nao encontrado"
+}
+```
+
+**Segurança:**
+- O token revogado é armazenado em uma lista de tokens inválidos
+- Tentativas de usar um token revogado resultarão em erro 401 Unauthorized
+
 #### POST /users/logout
 Revoga o token JWT atual, invalidando a sessão do usuário.
 
@@ -119,9 +146,9 @@ Revoga o token JWT atual, invalidando a sessão do usuário.
 }
 ```
 
+
 **Segurança:**
-- O token revogado é armazenado em uma lista de tokens inválidos
-- Tentativas de usar um token revogado resultarão em erro 401 Unauthorized
+-
 
 ### Gerenciamento de Usuários
 
