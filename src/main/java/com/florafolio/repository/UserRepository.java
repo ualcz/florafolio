@@ -1,6 +1,6 @@
-package com.login.repository;
+package com.florafolio.repository;
 
-import com.login.model.User;
+import com.florafolio.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.UUID;

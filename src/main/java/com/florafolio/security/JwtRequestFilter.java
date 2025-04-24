@@ -1,4 +1,4 @@
-package com.login.security;
+package com.florafolio.security;
 
 import org.springframework.lang.NonNull;
 import io.jsonwebtoken.ExpiredJwtException;

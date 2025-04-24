@@ -1,4 +1,4 @@
-package com.login.dto;
+package com.florafolio.dto.auth;
 import jakarta.validation.constraints.NotBlank;
 
 public class PasswordUpdateDTO {

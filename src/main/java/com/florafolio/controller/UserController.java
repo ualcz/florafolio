@@ -1,15 +1,15 @@
-package com.login.controller;
+package com.florafolio.controller;
 
-import com.login.dto.LoginRequestDTO;
-import com.login.dto.LoginResponseDTO;
-import com.login.dto.PasswordUpdateDTO;
-import com.login.dto.RegisterRequestDTO;
-import com.login.dto.ResponseDTO;
-import com.login.dto.UserDTO;
-import com.login.dto.UsernameUpdateDTO;
-import com.login.model.User;
-import com.login.service.UserService;
-import com.login.security.JwtUtil;
+import com.florafolio.dto.auth.LoginRequestDTO;
+import com.florafolio.dto.auth.LoginResponseDTO;
+import com.florafolio.dto.auth.PasswordUpdateDTO;
+import com.florafolio.dto.auth.RegisterRequestDTO;
+import com.florafolio.dto.auth.ResponseDTO;
+import com.florafolio.dto.auth.UserDTO;
+import com.florafolio.dto.auth.UsernameUpdateDTO;
+import com.florafolio.model.User;
+import com.florafolio.service.UserService;
+import com.florafolio.security.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -12,10 +12,10 @@
     </parent>
     
     <groupId>com</groupId>
-    <artifactId>login-api</artifactId>
+    <artifactId>Florafolio</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>login-api</name>
-    <description>API de Login com Spring Boot</description>
+    <name>florafolio</name>
+    <description>API de gerenciamento de platas com Spring Boot</description>
     
     <properties>
         <java.version>17</java.version>

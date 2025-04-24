@@ -1,4 +1,4 @@
-package com.login.dto;
+package com.florafolio.dto.auth;
 
 public class LoginResponseDTO {
     private String status;

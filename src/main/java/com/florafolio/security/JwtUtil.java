@@ -1,6 +1,6 @@
-package com.login.security;
+package com.florafolio.security;
 
-import com.login.model.User;
+import com.florafolio.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -46,7 +46,7 @@ public class JwtUtil {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", user.getId().toString());
-        claims.put("role", "USER");
+        claims.put("role",  user.getRole().name());
         return createToken(claims, user.getUsername());
     }
 

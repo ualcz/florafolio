@@ -1,7 +1,7 @@
-package com.login.security;
+package com.florafolio.security;
 
-import com.login.model.User;
-import com.login.service.UserService;
+import com.florafolio.model.User;
+import com.florafolio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,10 +26,11 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Usuário não encontrado: " + username);
         }
         
+        // Adiciona a autoridade baseada no papel do usuário
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
         );
     }
 }

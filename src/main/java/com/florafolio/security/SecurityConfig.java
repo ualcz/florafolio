@@ -1,4 +1,4 @@
-package com.login.security;
+package com.florafolio.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +29,10 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/register").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/plants/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/plants/**").hasAuthority("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/plants/**").hasAuthority("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/plants/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

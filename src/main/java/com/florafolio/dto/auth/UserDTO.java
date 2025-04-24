@@ -1,4 +1,4 @@
-package com.login.dto;
+package com.florafolio.dto.auth;
 
 import java.util.UUID;
 import jakarta.validation.constraints.NotBlank;

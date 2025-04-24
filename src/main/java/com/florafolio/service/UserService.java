@@ -1,7 +1,7 @@
-package com.login.service;
+package com.florafolio.service;
 
-import com.login.model.User;
-import com.login.repository.UserRepository;
+import com.florafolio.model.User;
+import com.florafolio.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,13 +24,34 @@ public class UserService {
     @PostConstruct
     @Transactional
     public void init() {
-        // Só adiciona usuários de teste se o banco estiver vazio
-        if (userRepository.count() == 0) {
-            // Adiciona alguns usuários para teste com senhas criptografadas
-            User admin = new User(null, "admin", passwordEncoder.encode("admin123"), "admin@example.com");
-            User user = new User(null, "user", passwordEncoder.encode("user123"), "user@example.com");
-            userRepository.save(admin);
-            userRepository.save(user);
+        System.out.println("Iniciando verificação de usuários no banco de dados...");
+        try {
+            if (userRepository.count() == 0) {
+                System.out.println("Banco de dados vazio. Criando usuários iniciais...");
+                // Cria o usuário administrador
+                User admin = new User(null, "admin", passwordEncoder.encode("admin123"), "admin@example.com", User.Role.ADMIN);
+                admin = userRepository.save(admin);
+                System.out.println("Usuário admin criado com sucesso. ID: " + admin.getId());
+
+                // Cria o usuário padrão
+                User user = new User(null, "user", passwordEncoder.encode("user123"), "user@example.com", User.Role.USER);
+                user = userRepository.save(user);
+                System.out.println("Usuário padrão criado com sucesso. ID: " + user.getId());
+            } else {
+                System.out.println("Usuários já existem no banco de dados. Verificando admin...");
+                User admin = userRepository.findByUsername("admin");
+                if (admin == null) {
+                    System.out.println("Usuário admin não encontrado. Criando...");
+                    admin = new User(null, "admin", passwordEncoder.encode("admin123"), "admin@example.com", User.Role.ADMIN);
+                    admin = userRepository.save(admin);
+                    System.out.println("Usuário admin criado com sucesso. ID: " + admin.getId());
+                } else {
+                    System.out.println("Usuário admin já existe. ID: " + admin.getId());
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erro durante a inicialização dos usuários: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     

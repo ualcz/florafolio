@@ -1,4 +1,4 @@
-package com.login.config;
+package com.florafolio.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
