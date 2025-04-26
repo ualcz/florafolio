@@ -23,8 +23,7 @@ public class Plant {
     @Column(nullable = false)
     private String scientificName;
     
-    @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
     
     @Column

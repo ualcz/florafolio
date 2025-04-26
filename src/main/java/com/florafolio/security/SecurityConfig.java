@@ -28,11 +28,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/register").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/plants/**").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/plants/**").hasAuthority("ADMIN")
-                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/plants/**").hasAuthority("ADMIN")
-                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/plants/**").hasAuthority("ADMIN")
+                .requestMatchers("/login", "/register","/plants/**").permitAll()
+                .requestMatchers("/error").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/admin/plants/**").hasAuthority("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/admin/plants/**").hasAuthority("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/admin/plants/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

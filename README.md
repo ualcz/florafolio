@@ -19,6 +19,13 @@ Formato do cabeçalho:
 Authorization: Bearer {seu_token_jwt}
 ```
 
+### Níveis de Acesso
+
+A API possui dois níveis de acesso:
+
+1. **Usuário Regular**: Acesso a operações básicas de leitura e gerenciamento do próprio perfil
+2. **Administrador**: Acesso completo, incluindo operações de gerenciamento de plantas
+
 ## Estrutura de Dados
 ## 🛠 Configuração
 
@@ -36,7 +43,6 @@ spring.datasource.password=${DB_PASSWORD}
 jwt.secret=${JWT_SECRET}
 jwt.expiration=3600
 ```
-
 
 ## Endpoints
 
@@ -124,6 +130,28 @@ GET /users/profile
 - `401 Unauthorized`: Token inválido ou ausente
 - `404 Not Found`: Usuário não encontrado
 
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Perfil obtido com sucesso",
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "username": "exemplo_usuario",
+    "email": "usuario@exemplo.com",
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+**Exemplo de Resposta (401 Unauthorized):**
+```json
+{
+  "status": "error",
+  "message": "Token inválido ou expirado"
+}
+```
+
 #### Buscar Usuário por Nome de Usuário
 
 ```
@@ -141,6 +169,26 @@ GET /users/{username}
 - `200 OK`: Usuário encontrado com sucesso
 - `401 Unauthorized`: Token inválido ou ausente
 - `404 Not Found`: Usuário não encontrado
+
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Usuário encontrado",
+  "user": {
+    "username": "exemplo_usuario",
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+**Exemplo de Resposta (404 Not Found):**
+```json
+{
+  "status": "error",
+  "message": "Usuário não encontrado"
+}
+```
 
 #### Atualizar Nome de Usuário
 
@@ -168,6 +216,28 @@ PUT /users/{id}/username
 - `400 Bad Request`: Dados inválidos ou incompletos
 - `401 Unauthorized`: Token inválido ou ausente
 - `404 Not Found`: Usuário não encontrado
+
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Nome de usuário atualizado com sucesso",
+  "user": {
+    "username": "novo_nome"
+  }
+}
+```
+
+**Exemplo de Resposta (400 Bad Request):**
+```json
+{
+  "status": "error",
+  "message": "Nome de usuário inválido ou já existe",
+  "errors": [
+    "O nome de usuário deve ter entre 3 e 20 caracteres"
+  ]
+}
+```
 
 #### Atualizar Senha
 
@@ -197,6 +267,22 @@ PUT /users/{id}/password
 - `404 Not Found`: Usuário não encontrado
 - `500 Internal Server Error`: Erro interno ao atualizar senha
 
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Senha atualizada com sucesso"
+}
+```
+
+**Exemplo de Resposta (401 Unauthorized):**
+```json
+{
+  "status": "error",
+  "message": "Senha atual incorreta"
+}
+```
+
 #### Excluir Conta de Usuário
 
 ```
@@ -212,9 +298,27 @@ DELETE /users/delete
 - `401 Unauthorized`: Token inválido ou ausente
 - `404 Not Found`: Usuário não encontrado
 
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Conta excluída com sucesso"
+}
+```
+
+**Exemplo de Resposta (401 Unauthorized):**
+```json
+{
+  "status": "error",
+  "message": "Token inválido ou ausente"
+}
+```
+
 ### Gerenciamento de Plantas
 
-#### Listar Todas as Plantas
+#### Endpoints Públicos
+
+##### Listar Todas as Plantas
 
 ```
 GET /plants
@@ -240,22 +344,12 @@ GET /plants
       "origin": "América Central e do Sul",
       "careInstructions": "Manter em local com luz indireta e solo úmido. Regar regularmente.",
       "imageUrl": "https://example.com/samambaia.jpg"
-    },
-    {
-      "id": "223e4567-e89b-12d3-a456-426614174000",
-      "popularName": "Espada de São Jorge",
-      "scientificName": "Sansevieria trifasciata",
-      "description": "Planta resistente com folhas eretas e pontiagudas, excelente para purificar o ar.",
-      "family": "Asparagaceae",
-      "origin": "África Ocidental",
-      "careInstructions": "Tolera baixa luminosidade e pouca água. Regar apenas quando o solo estiver seco.",
-      "imageUrl": "https://example.com/espada-sao-jorge.jpg"
     }
   ]
 }
 ```
 
-#### Buscar Planta por ID
+##### Buscar Planta por ID
 
 ```
 GET /plants/{id}
@@ -270,7 +364,33 @@ GET /plants/{id}
 - `200 OK`: Planta encontrada com sucesso
 - `404 Not Found`: Planta não encontrada
 
-#### Buscar Plantas por Nome Popular
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Planta encontrada com sucesso",
+  "plant": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "popularName": "Samambaia",
+    "scientificName": "Nephrolepis exaltata",
+    "description": "A samambaia é uma planta ornamental muito popular, conhecida por suas folhas verdes e delicadas.",
+    "family": "Nephrolepidaceae",
+    "origin": "América Central e do Sul",
+    "careInstructions": "Manter em local com luz indireta e solo úmido. Regar regularmente.",
+    "imageUrl": "https://example.com/samambaia.jpg"
+  }
+}
+```
+
+**Exemplo de Resposta (404 Not Found):**
+```json
+{
+  "status": "error",
+  "message": "Planta não encontrada"
+}
+```
+
+##### Buscar Plantas por Nome Popular
 
 ```
 GET /plants/search/popular?name={termo}
@@ -284,7 +404,27 @@ GET /plants/search/popular?name={termo}
 **Respostas:**
 - `200 OK`: Busca realizada com sucesso
 
-#### Buscar Plantas por Nome Científico
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Plantas encontradas com sucesso",
+  "plants": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "popularName": "Samambaia",
+      "scientificName": "Nephrolepis exaltata"
+    },
+    {
+      "id": "987fcdeb-a654-3210-9876-543210987654",
+      "popularName": "Samambaiaçu",
+      "scientificName": "Dicksonia sellowiana"
+    }
+  ]
+}
+```
+
+##### Buscar Plantas por Nome Científico
 
 ```
 GET /plants/search/scientific?name={termo}
@@ -298,7 +438,27 @@ GET /plants/search/scientific?name={termo}
 **Respostas:**
 - `200 OK`: Busca realizada com sucesso
 
-#### Buscar Plantas por Termo (Nome Popular ou Científico)
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Plantas encontradas com sucesso",
+  "plants": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "popularName": "Samambaia",
+      "scientificName": "Nephrolepis exaltata"
+    },
+    {
+      "id": "987fcdeb-a654-3210-9876-543210987654",
+      "popularName": "Samambaiaçu",
+      "scientificName": "Dicksonia sellowiana"
+    }
+  ]
+}
+```
+
+##### Buscar Plantas por Termo (Nome Popular ou Científico)
 
 ```
 GET /plants/search?term={termo}
@@ -312,10 +472,32 @@ GET /plants/search?term={termo}
 **Respostas:**
 - `200 OK`: Busca realizada com sucesso
 
-#### Criar Nova Planta
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Plantas encontradas com sucesso",
+  "plants": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "popularName": "Samambaia",
+      "scientificName": "Nephrolepis exaltata"
+    },
+    {
+      "id": "987fcdeb-a654-3210-9876-543210987654",
+      "popularName": "Samambaiaçu",
+      "scientificName": "Dicksonia sellowiana"
+    }
+  ]
+}
+```
+
+#### Endpoints Administrativos
+
+##### Criar Nova Planta
 
 ```
-POST /plants
+POST /admin/plants
 ```
 
 **Descrição:** Cria uma nova planta no sistema (requer permissão de administrador).
@@ -341,10 +523,49 @@ POST /plants
 - `401 Unauthorized`: Token inválido ou ausente
 - `403 Forbidden`: Usuário não tem permissão de administrador
 
-#### Atualizar Planta Existente
+**Exemplo de Resposta (201 Created):**
+```json
+{
+  "status": "success",
+  "message": "Planta criada com sucesso",
+  "plant": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "popularName": "Lírio da Paz",
+    "scientificName": "Spathiphyllum wallisii",
+    "description": "Planta com flores brancas elegantes, conhecida por purificar o ar.",
+    "family": "Araceae",
+    "origin": "América Central e Colômbia",
+    "careInstructions": "Luz indireta, solo úmido mas não encharcado, ambiente com umidade.",
+    "imageUrl": "https://example.com/lirio-paz.jpg"
+  }
+}
+```
+
+**Exemplo de Resposta (400 Bad Request):**
+```json
+{
+  "status": "error",
+  "message": "Dados inválidos",
+  "errors": [
+    "O nome popular é obrigatório",
+    "O nome científico é obrigatório",
+    "A descrição deve ter no mínimo 10 caracteres"
+  ]
+}
+```
+
+**Exemplo de Resposta (403 Forbidden):**
+```json
+{
+  "status": "error",
+  "message": "Acesso negado. Permissão de administrador necessária"
+}
+```
+
+##### Atualizar Planta Existente
 
 ```
-PUT /plants/{id}
+PUT /admin/plants/{id}
 ```
 
 **Descrição:** Atualiza os dados de uma planta existente (requer permissão de administrador).
@@ -374,10 +595,36 @@ PUT /plants/{id}
 - `403 Forbidden`: Usuário não tem permissão de administrador
 - `404 Not Found`: Planta não encontrada
 
-#### Excluir Planta
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Planta atualizada com sucesso",
+  "plant": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "popularName": "Lírio da Paz Atualizado",
+    "scientificName": "Spathiphyllum wallisii",
+    "description": "Descrição atualizada da planta.",
+    "family": "Araceae",
+    "origin": "América Central e Colômbia",
+    "careInstructions": "Instruções de cuidado atualizadas.",
+    "imageUrl": "https://example.com/lirio-paz-novo.jpg"
+  }
+}
+```
+
+**Exemplo de Resposta (404 Not Found):**
+```json
+{
+  "status": "error",
+  "message": "Planta não encontrada"
+}
+```
+
+##### Excluir Planta
 
 ```
-DELETE /plants/{id}
+DELETE /admin/plants/{id}
 ```
 
 **Descrição:** Remove uma planta do sistema (requer permissão de administrador).
@@ -392,6 +639,22 @@ DELETE /plants/{id}
 - `401 Unauthorized`: Token inválido ou ausente
 - `403 Forbidden`: Usuário não tem permissão de administrador
 - `404 Not Found`: Planta não encontrada
+
+**Exemplo de Resposta (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Planta excluída com sucesso"
+}
+```
+
+**Exemplo de Resposta (403 Forbidden):**
+```json
+{
+  "status": "error",
+  "message": "Acesso negado. Permissão de administrador necessária"
+}
+```
 
 ## Documentação Interativa
 
