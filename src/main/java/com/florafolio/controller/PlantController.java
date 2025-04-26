@@ -167,14 +167,18 @@ public class PlantController {
     
     // Endpoint para criar nova planta (apenas admin)
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> createPlant(@Valid @RequestBody CreatePlantRequestDTO createPlantRequest) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<PlantResponseDTO> createPlant(@Valid @RequestBody CreatePlantRequestDTO createPlantRequest) {
         Plant plant = convertToEntity(createPlantRequest);
         Plant savedPlant = plantService.createPlant(plant);
         
-        ResponseDTO response = new ResponseDTO(
+        List<PlantDTO> plantDTOs = new ArrayList<>();
+        plantDTOs.add(convertToDTO(savedPlant));
+        
+        PlantResponseDTO response = new PlantResponseDTO(
             "success",
-            "Planta criada com sucesso"
+            "Planta criada com sucesso",
+            plantDTOs
         );
         
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -182,7 +186,7 @@ public class PlantController {
     
     // Endpoint para atualizar planta existente (apenas admin)
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> updatePlant(
             @PathVariable UUID id,
             @Valid @RequestBody UpdatePlantRequestDTO updatePlantRequest) {
@@ -209,7 +213,7 @@ public class PlantController {
     
     // Endpoint para excluir planta (apenas admin)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> deletePlant(@PathVariable UUID id) {
         boolean deleted = plantService.deletePlant(id);
         
